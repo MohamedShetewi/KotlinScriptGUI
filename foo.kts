@@ -1,2 +1,1 @@
-for(i in 1..1000)
-	println(i)
+for(i in 1..65) print(i)

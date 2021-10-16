@@ -1,16 +1,18 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 public class ScriptView extends JFrame {
 
-    private JTextArea scriptArea;
-    private JEditorPane outputArea;
-    private JButton runButton;
-    private JLabel runningLabel;
+    private final JTextArea scriptArea;
+    private final JEditorPane outputArea;
+    private final JButton runButton;
+    private final JLabel runningLabel;
 
 
     public ScriptView()  {
@@ -23,11 +25,11 @@ public class ScriptView extends JFrame {
         Font font = null;
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("Inconsolata_Condensed-Regular.ttf"));
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
+
+        assert font != null;
         font = font.deriveFont(Font.BOLD , 20);
 
         JLabel scriptAreaIndicator = new JLabel("Script:");
@@ -36,6 +38,7 @@ public class ScriptView extends JFrame {
 
         scriptArea = new JTextArea();
         scriptArea.setFont(font);
+        scriptArea.setFocusable(true);
         JScrollPane scriptAreaScroll = new JScrollPane(scriptArea);
         setComponentView(scriptAreaScroll,10 , 30 , 700 , 400 , false);
 
@@ -55,6 +58,7 @@ public class ScriptView extends JFrame {
         outputArea.setFont(font.deriveFont(Font.BOLD,18));
         outputArea.setContentType("text/html");
         outputArea.setEditable(false);
+
 
         JScrollPane outputAreaScroll = new JScrollPane(outputArea);
         setComponentView(outputAreaScroll , 10,500,700,200,true);
