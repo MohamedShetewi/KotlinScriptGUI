@@ -13,20 +13,21 @@ import java.util.List;
 public class ErrorNavigation {
 
     private final ScriptView scriptView;
-    private DefaultHighlighter.DefaultHighlightPainter painter;
+    private final DefaultHighlighter.DefaultHighlightPainter painter;
 
-    public ErrorNavigation(ScriptView scriptView) {
+    public ErrorNavigation(ScriptView scriptView, DefaultHighlighter.DefaultHighlightPainter painter) {
         this.scriptView = scriptView;
+        this.painter = painter;
     }
 
     public void jumpToError(HyperlinkEvent e) {
-
+        clearErrorHighlights();
         SwingUtilities.invokeLater(() -> {
-            clearErrorHighlights();
+            System.out.println(e.getEventType().toString() + " "+e.getDescription()+ " "+e.getURL());
+
             int lineNumber = Integer.parseInt(e.getDescription()) - 1;
             scriptView.getScriptArea().setCaretPosition(lineNumber);
             scriptView.getScriptArea().requestFocus();
-            painter = new DefaultHighlighter.DefaultHighlightPainter(Color.lightGray);
             int startIndex = 0, endIndex = 0;
             try {
                 int[]offsets = getOffsets(lineNumber, scriptView.getScriptArea().getText());
@@ -34,6 +35,7 @@ public class ErrorNavigation {
                 endIndex = offsets[1];
                 scriptView.getScriptArea().getHighlighter().addHighlight(startIndex, endIndex, painter);
             } catch (BadLocationException ex) {
+                System.out.println("Exception");
                 ex.printStackTrace();
             }
         });
@@ -55,6 +57,6 @@ public class ErrorNavigation {
 
 
     private void clearErrorHighlights() {
-        scriptView.getScriptArea().getHighlighter().removeAllHighlights();
+        SwingUtilities.invokeLater(() -> scriptView.getScriptArea().getHighlighter().removeAllHighlights());
     }
 }

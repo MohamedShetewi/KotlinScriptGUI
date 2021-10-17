@@ -22,7 +22,7 @@ public class Control {
         DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.lightGray);
         ScriptView scriptView = new ScriptView();
         scriptRunning = new ScriptRunning(scriptView);
-        errorNavigation = new ErrorNavigation(scriptView);
+        errorNavigation = new ErrorNavigation(scriptView, painter);
         keywordsHighLighter = new KeywordsHighLighter(scriptView.getScriptArea(), painter);
 
         scriptView.getOutputArea().addHyperlinkListener(errorClicked -> {
