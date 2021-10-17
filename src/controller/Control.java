@@ -7,6 +7,7 @@ import view.ScriptView;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.DefaultHighlighter;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -14,16 +15,15 @@ public class Control {
 
     private final ScriptRunning scriptRunning;
     private final KeywordsHighLighter keywordsHighLighter;
-    private DefaultHighlighter.DefaultHighlightPainter painter;
     private final ErrorNavigation errorNavigation;
-    private final ScriptView scriptView;
 
 
     public Control() {
-        scriptView = new ScriptView();
+        DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.lightGray);
+        ScriptView scriptView = new ScriptView();
         scriptRunning = new ScriptRunning(scriptView);
-        errorNavigation = new ErrorNavigation(scriptView, painter);
-        keywordsHighLighter = new KeywordsHighLighter(scriptView.getScriptArea());
+        errorNavigation = new ErrorNavigation(scriptView);
+        keywordsHighLighter = new KeywordsHighLighter(scriptView.getScriptArea(), painter);
 
         scriptView.getOutputArea().addHyperlinkListener(errorClicked -> {
             if (errorClicked.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
@@ -34,6 +34,11 @@ public class Control {
 
         scriptView.getScriptArea().addKeyListener(new KeyListener() {
             @Override
+            public void keyReleased(KeyEvent e) {
+                keywordsHighLighter.handleTextChanged();
+            }
+
+            @Override
             public void keyTyped(KeyEvent e) {
 
             }
@@ -41,11 +46,6 @@ public class Control {
             @Override
             public void keyPressed(KeyEvent e) {
 
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                keywordsHighLighter.handleTextChanged();
             }
         });
     }

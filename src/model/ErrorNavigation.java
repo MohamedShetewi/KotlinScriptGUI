@@ -15,9 +15,8 @@ public class ErrorNavigation {
     private final ScriptView scriptView;
     private DefaultHighlighter.DefaultHighlightPainter painter;
 
-    public ErrorNavigation(ScriptView scriptView, DefaultHighlighter.DefaultHighlightPainter painter) {
+    public ErrorNavigation(ScriptView scriptView) {
         this.scriptView = scriptView;
-        this.painter = painter;
     }
 
     public void jumpToError(HyperlinkEvent e) {
@@ -39,7 +38,6 @@ public class ErrorNavigation {
             }
         });
     }
-
 
     private int[] getOffsets(int lineNumber, String text)
     {

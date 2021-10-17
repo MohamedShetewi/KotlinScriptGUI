@@ -14,24 +14,20 @@ import java.util.stream.Stream;
 
 public class KeywordsHighLighter {
 
-    final private String[] keywords = new String[]{
-            "public", "if", "else", "var", "for", "break", "in", "while", "true", "false", "null", "print", "return", "String"
-    };
+
     private final JTextPane scriptArea;
     private final StyledDocument styledDocument;
-
-
-    public KeywordsHighLighter(JTextPane scriptArea) {
-        this.scriptArea = scriptArea;
-        this.styledDocument = this.scriptArea.getStyledDocument();
-    }
-
-
-
-
     private final StyleContext styleContext = StyleContext.getDefaultStyleContext();
     private final AttributeSet blueAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLUE);
     private final AttributeSet blackAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+    final private String[] keywords = new String[]{
+            "public", "if", "else", "var", "for", "break", "in", "while", "true", "false", "null", "print", "return", "String"
+    };
+
+    public KeywordsHighLighter(JTextPane scriptArea, DefaultHighlighter.DefaultHighlightPainter painter) {
+        this.scriptArea = scriptArea;
+        this.styledDocument = this.scriptArea.getStyledDocument();
+    }
 
     public void handleTextChanged() {
         SwingUtilities.invokeLater(this::highlight);
@@ -61,6 +57,4 @@ public class KeywordsHighLighter {
             offset += line.length() + 1;
         }
     }
-
-
 }

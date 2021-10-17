@@ -5,7 +5,7 @@ import view.ScriptView;
 
 import javax.swing.*;
 import java.io.*;
-import java.sql.SQLOutput;
+
 
 public class ScriptRunning {
 
