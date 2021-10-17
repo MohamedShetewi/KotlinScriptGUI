@@ -13,6 +13,8 @@ public class ScriptView extends JFrame {
     private final JEditorPane outputArea;
     private final JButton runButton;
     private final JLabel runningLabel;
+    private final JScrollPane scriptAreaScroll;
+
 
 
     public ScriptView()  {
@@ -41,7 +43,7 @@ public class ScriptView extends JFrame {
         scriptArea.getStyledDocument();
         scriptArea.setFont(font);
         scriptArea.setFocusable(true);
-        JScrollPane scriptAreaScroll = new JScrollPane(scriptArea);
+        scriptAreaScroll = new JScrollPane(scriptArea);
         setComponentView(scriptAreaScroll,10 , 30 , 700 , 400 , false);
 
         runButton = new JButton("Run");
@@ -79,6 +81,9 @@ public class ScriptView extends JFrame {
         add(component);
     }
 
+    public JScrollPane getScriptAreaScroll() {
+        return scriptAreaScroll;
+    }
 
     public JLabel getRunningLabel() {
         return runningLabel;

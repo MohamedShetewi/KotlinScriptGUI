@@ -25,7 +25,7 @@ public class ErrorNavigation {
             int lineNumber = Integer.parseInt(e.getDescription()) - 1;
             int startIndex = 0, endIndex = 0;
             try {
-                int[]offsets = getOffsets(lineNumber, scriptView.getScriptArea().getText());
+                int[]offsets = getOffsets(lineNumber);
                 startIndex = offsets[0];
                 endIndex = offsets[1];
                 scriptView.getScriptArea().getHighlighter().addHighlight(startIndex, endIndex, painter);
@@ -37,12 +37,21 @@ public class ErrorNavigation {
         });
     }
 
-    private int[] getOffsets(int lineNumber, String text)
+    private void adjustScrollBar(int line)
+    {
+
+        int linesCount = (int) scriptView.getScriptArea().getText().lines().count();
+
+        scriptView.getScriptAreaScroll().getVerticalScrollBar().setValue(line/linesCount);
+    }
+
+    private int[] getOffsets(int lineNumber)
     {
         int offset = 0;
         int count = 0;
+        String scriptAreaText = scriptView.getScriptArea().getText();
         List<String> lines = new ArrayList<>();
-        text.lines().forEach(lines::add);
+        scriptAreaText.lines().forEach(lines::add);
         while (count < lineNumber)
         {
             offset+=lines.get(count).length()+1;
