@@ -21,7 +21,7 @@ public class KeywordsHighLighter {
     private final AttributeSet blueAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLUE);
     private final AttributeSet blackAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
     final private String[] keywords = new String[]{
-            "public", "if", "else", "var", "for", "break", "in", "while", "true", "false", "null", "print", "return", "String"
+            "public", "if", "else", "var", "for", "break", "in", "while", "true", "false", "null", "print", "return", "String", "println"
     };
 
     public KeywordsHighLighter(JTextPane scriptArea, DefaultHighlighter.DefaultHighlightPainter painter) {
@@ -35,7 +35,7 @@ public class KeywordsHighLighter {
 
     private void highlight() {
         String regex = "([^a-zA-Z0-9]|^)(%s)([^a-zA-Z0-9]|$)";
-
+        scriptArea.getHighlighter().removeAllHighlights();
         styledDocument.setCharacterAttributes(0, scriptArea.getText().length(), blackAttributeSet, true);
         List<String> lines = new ArrayList<>();
         scriptArea.getText().lines().forEach(lines::add);
