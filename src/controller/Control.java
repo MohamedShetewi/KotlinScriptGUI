@@ -16,13 +16,14 @@ public class Control {
     private final KeywordsHighLighter keywordsHighLighter;
     private DefaultHighlighter.DefaultHighlightPainter painter;
     private final ErrorNavigation errorNavigation;
+    private final ScriptView scriptView;
 
 
     public Control() {
-        ScriptView scriptView = new ScriptView();
+        scriptView = new ScriptView();
         scriptRunning = new ScriptRunning(scriptView);
         errorNavigation = new ErrorNavigation(scriptView, painter);
-        keywordsHighLighter = new KeywordsHighLighter();
+        keywordsHighLighter = new KeywordsHighLighter(scriptView.getScriptArea());
 
         scriptView.getOutputArea().addHyperlinkListener(errorClicked -> {
             if (errorClicked.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
@@ -44,7 +45,7 @@ public class Control {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                keywordsHighLighter.highlight(scriptView.getScriptArea());
+                keywordsHighLighter.handleTextChanged();
             }
         });
     }

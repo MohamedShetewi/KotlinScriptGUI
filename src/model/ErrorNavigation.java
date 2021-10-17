@@ -7,6 +7,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ErrorNavigation {
 
@@ -28,14 +30,31 @@ public class ErrorNavigation {
             painter = new DefaultHighlighter.DefaultHighlightPainter(Color.lightGray);
             int startIndex = 0, endIndex = 0;
             try {
-                startIndex = scriptView.getScriptArea().getLineStartOffset(lineNumber);
-                endIndex = scriptView.getScriptArea().getLineEndOffset(lineNumber);
+                int[]offsets = getOffsets(lineNumber, scriptView.getScriptArea().getText());
+                startIndex = offsets[0];
+                endIndex = offsets[1];
                 scriptView.getScriptArea().getHighlighter().addHighlight(startIndex, endIndex, painter);
             } catch (BadLocationException ex) {
                 ex.printStackTrace();
             }
         });
     }
+
+
+    private int[] getOffsets(int lineNumber, String text)
+    {
+        int offset = 0;
+        int count = 0;
+        List<String> lines = new ArrayList<>();
+        text.lines().forEach(lines::add);
+        while (count < lineNumber)
+        {
+            offset+=lines.get(count).length()+1;
+            count++;
+        }
+        return new int[]{offset, offset + lines.get(count).length()};
+    }
+
 
     private void clearErrorHighlights() {
         scriptView.getScriptArea().getHighlighter().removeAllHighlights();

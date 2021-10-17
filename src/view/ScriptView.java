@@ -1,15 +1,15 @@
 package view;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 public class ScriptView extends JFrame {
 
-    private final JTextArea scriptArea;
+    private final JTextPane scriptArea;
     private final JEditorPane outputArea;
     private final JButton runButton;
     private final JLabel runningLabel;
@@ -36,7 +36,9 @@ public class ScriptView extends JFrame {
         setComponentView(scriptAreaIndicator,10,10,0,0 , false);
         scriptAreaIndicator.setOpaque(true);
 
-        scriptArea = new JTextArea();
+        DefaultStyledDocument document = new DefaultStyledDocument();
+        scriptArea = new JTextPane(document);
+        scriptArea.getStyledDocument();
         scriptArea.setFont(font);
         scriptArea.setFocusable(true);
         JScrollPane scriptAreaScroll = new JScrollPane(scriptArea);
@@ -83,7 +85,7 @@ public class ScriptView extends JFrame {
     }
 
 
-    public JTextArea getScriptArea() {
+    public JTextPane getScriptArea() {
         return scriptArea;
     }
 

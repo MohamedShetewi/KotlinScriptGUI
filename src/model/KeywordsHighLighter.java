@@ -1,7 +1,8 @@
 package model;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -16,29 +17,50 @@ public class KeywordsHighLighter {
     final private String[] keywords = new String[]{
             "public", "if", "else", "var", "for", "break", "in", "while", "true", "false", "null", "print", "return", "String"
     };
-
-    public void highlight(JTextArea scriptArea) {
-        String regex = "([^a-zA-Z0-9]|^)(%s)([^a-zA-Z0-9])";
-
-        Runnable r = () -> {
-            List<String> lines = new ArrayList<>();
-            scriptArea.getText().lines().forEach(lines::add);
-            for(String line: lines)
-            {
-                for(String keyword: keywords)
-                {
-                    Matcher m =  Pattern.compile(String.format(regex,keyword)).matcher(line);
-                    while (m.find())
-                        System.out.println(line.substring(m.start(), m.end()));
-                }
-            }
-        };
-        r.run();
+    private final JTextPane scriptArea;
+    private final StyledDocument styledDocument;
 
 
-
+    public KeywordsHighLighter(JTextPane scriptArea) {
+        this.scriptArea = scriptArea;
+        this.styledDocument = this.scriptArea.getStyledDocument();
     }
 
+
+
+
+    private final StyleContext styleContext = StyleContext.getDefaultStyleContext();
+    private final AttributeSet blueAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLUE);
+    private final AttributeSet blackAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+
+    public void handleTextChanged() {
+        SwingUtilities.invokeLater(this::highlight);
+    }
+
+    private void highlight() {
+        String regex = "([^a-zA-Z0-9]|^)(%s)([^a-zA-Z0-9]|$)";
+
+        styledDocument.setCharacterAttributes(0, scriptArea.getText().length(), blackAttributeSet, true);
+        List<String> lines = new ArrayList<>();
+        scriptArea.getText().lines().forEach(lines::add);
+
+        int offset = 0;
+
+        for (String line : lines) {
+            for (String keyword : keywords) {
+                Matcher m = Pattern.compile(String.format(regex, keyword)).matcher(line);
+                while (m.find()) {
+                    int start = m.start();
+                    int end = m.end() - 1;
+
+                    while (line.charAt(start) < 'a' || line.charAt(start) > 'z') start++;
+                    while (line.charAt(end) < 'a' || line.charAt(end) > 'z') end--;
+                    styledDocument.setCharacterAttributes(offset + start, end - start + 1, blueAttributeSet, false);
+                }
+            }
+            offset += line.length() + 1;
+        }
+    }
 
 
 }
