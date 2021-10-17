@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,19 +22,16 @@ public class ErrorNavigation {
     public void jumpToError(HyperlinkEvent e) {
         clearErrorHighlights();
         SwingUtilities.invokeLater(() -> {
-            System.out.println(e.getEventType().toString() + " "+e.getDescription()+ " "+e.getURL());
-
             int lineNumber = Integer.parseInt(e.getDescription()) - 1;
-            scriptView.getScriptArea().setCaretPosition(lineNumber);
-            scriptView.getScriptArea().requestFocus();
             int startIndex = 0, endIndex = 0;
             try {
                 int[]offsets = getOffsets(lineNumber, scriptView.getScriptArea().getText());
                 startIndex = offsets[0];
                 endIndex = offsets[1];
                 scriptView.getScriptArea().getHighlighter().addHighlight(startIndex, endIndex, painter);
+                scriptView.getScriptArea().setCaretPosition(startIndex);
+                scriptView.getScriptArea().requestFocus();
             } catch (BadLocationException ex) {
-                System.out.println("Exception");
                 ex.printStackTrace();
             }
         });
